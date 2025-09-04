@@ -1,0 +1,20 @@
+version: "3.3"
+
+services:
+  bot:
+    container_name: artlife-bot
+    build:
+      context: ./bot
+    restart: always
+
+    volumes:
+      - ./data:/bot/data
+
+  # bot:
+  #   container_name: repricer-bot
+  #   build:
+  #     context: ./repricer
+  #   restart: always
+
+  #   volumes:
+  #     - ./data:/code/data

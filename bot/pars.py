@@ -37,6 +37,8 @@ def check():
         name = comp['name']
         url = comp['link']
         price = comp['price']
+        opt_price = comp['opt_price']
+
 
         trying = 0
         while trying != 5:
@@ -48,23 +50,28 @@ def check():
             
             try:
                 comp_price = soup.findAll('div', class_='priceBlockPriceWrap--G4F0p priceBlockPriceWrapWallet--rjb9S')[0].get_text() 
-                print(comp_price)
                 
                 comp_price = int(comp_price.split('₽')[0].split('\\')[0])
                 break
             except:
                 try:
                     comp_price = soup.findAll('div', class_='priceBlockPriceWrap--G4F0p priceBlockPriceWrapWallet--rjb9S')[0].get_text() 
-                    print(comp_price.split('₽')[0].split()[0] + comp_price.split('₽')[0].split()[1])
 
                     comp_price = int(comp_price.split('₽')[0].split()[0] + comp_price.split('₽')[0].split()[1])
-                    print(comp_price)
                     break
                 except:
-                    trying += 1
-                    if trying == 5:
-                        comp_price = 1000000000
-                        break
+                    try:
+                        stock = soup.findAll('span', class_='soldOutProductText--hhsT1')[0].get_text() 
+                        if stock == 'Нет в\xa0наличии':
+                            comp_price = 10000000000000
+                            print('Нет в наличии')
+                            break
+                        
+                    except:
+                        trying += 1
+                        if trying == 5:
+                            comp_price = 1000000000
+                            break
 
                 #         raise Exception(
                 #             'ВБ сломался'
@@ -72,7 +79,8 @@ def check():
                 
         print(f'{comp_price=}')
         if comp_price <= price:
-            answer = answer + f'{name} {url}\nПо цене {comp_price}\n'
+            disc = round(comp_price / opt_price, 2) * 100
+            answer = answer + f'{name} {url}\nПо цене {comp_price}, скидка {disc}%\n'
 
     driver.quit()
 

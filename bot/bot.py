@@ -100,7 +100,7 @@ async def check():
 
 
 async def scheduler():
-    every(5).minutes.do(check)
+    every(15).minutes.do(check)
 
     while True:
         await run_pending()
